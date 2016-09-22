@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Timecode" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -15,11 +19,71 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" layoutMarginsFollowReadableWidth="YES" text="00:00:00:0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WO3-fy-36k">
+                                <rect key="frame" x="244" y="28" width="113" height="76"/>
+                                <gestureRecognizers/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="24"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="zOb-Sv-Whs">
+                                <rect key="frame" x="20" y="43" width="74" height="45"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" button="YES" staticText="YES"/>
+                                </accessibility>
+                                <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
+                                <state key="normal" title="Start"/>
+                                <connections>
+                                    <action selector="startTouched:" destination="BYZ-38-t0r" eventType="touchDown" id="USU-JV-csd"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="UhV-Ca-nIi">
+                                <rect key="frame" x="506" y="43" width="74" height="45"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" button="YES" staticText="YES"/>
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
+                                <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
+                                <state key="normal" title="Pause"/>
+                                <connections>
+                                    <action selector="stopTouched:" destination="BYZ-38-t0r" eventType="touchDown" id="UbO-E0-6hc"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="WO3-fy-36k" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="70Z-ei-Nrx"/>
+                            <constraint firstItem="WO3-fy-36k" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="BTO-XO-l47"/>
+                            <constraint firstItem="WO3-fy-36k" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="23" id="CgC-2o-171"/>
+                            <constraint firstAttribute="bottom" secondItem="zOb-Sv-Whs" secondAttribute="bottom" constant="20" symbolic="YES" id="DR2-2f-eG4"/>
+                            <constraint firstItem="WO3-fy-36k" firstAttribute="centerY" relation="greaterThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="firstBaseline" id="ITb-ni-IJb"/>
+                            <constraint firstItem="UhV-Ca-nIi" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="23" id="Oj2-nk-DjI"/>
+                            <constraint firstItem="zOb-Sv-Whs" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="Pgx-hZ-D1P"/>
+                            <constraint firstItem="UhV-Ca-nIi" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="SID-IA-ubU"/>
+                            <constraint firstItem="zOb-Sv-Whs" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="23" id="jfu-ch-mtf"/>
+                            <constraint firstItem="zOb-Sv-Whs" firstAttribute="centerX" secondItem="WO3-fy-36k" secondAttribute="centerX" id="xQ4-jp-7fp"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="DR2-2f-eG4"/>
+                                <exclude reference="xQ4-jp-7fp"/>
+                                <exclude reference="70Z-ei-Nrx"/>
+                                <exclude reference="ITb-ni-IJb"/>
+                            </mask>
+                        </variation>
                     </view>
+                    <connections>
+                        <outlet property="startButton" destination="zOb-Sv-Whs" id="pRe-LG-urQ"/>
+                        <outlet property="stopButton" destination="UhV-Ca-nIi" id="fSE-BC-Fee"/>
+                        <outlet property="timeLabel" destination="WO3-fy-36k" id="7nv-T6-dWN"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="-51" y="109"/>
         </scene>
     </scenes>
 </document>
