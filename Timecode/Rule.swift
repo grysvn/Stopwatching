@@ -22,4 +22,8 @@ class Rule {
         self.pause = pause;
         self.repetitions = repetitions;
     }
+    
+    func calculateTotalTime() {
+        
+    }
 }
