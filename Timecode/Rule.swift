@@ -54,4 +54,8 @@ class Rule : NSObject, NSCoding {
         aCoder.encode(pause, forKey: "pause")
         aCoder.encode(repetitions, forKey: "repetitions")
     }
+    
+    func getCacheName() -> String {
+        return "CACHE_" + self.label
+    }
 }

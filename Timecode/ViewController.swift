@@ -17,6 +17,7 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var ruleTable: UITableView!
     var ruleList = RuleList(List: [Rule]())
+    //var ruleKeys: [String] = []
     var enabled = false //wh
     var editingRule = false //editing a rule
     var timer = Timer() //timer for timing. duh
@@ -58,6 +59,19 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
         self.navigationController?.navigationBar.isTranslucent = false
         UIApplication.shared.isIdleTimerDisabled = true
         self.ruleTable.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        //lets add any rules that are saved
+        for x in UserDefaults.standard.dictionaryRepresentation() {
+            if let unarchivedObject = UserDefaults.standard.object(forKey: x.key) as? Data {
+                let unarchived = NSKeyedUnarchiver.unarchiveObject(with: unarchivedObject)
+                if (unarchived is Rule) {
+                    let cast = (unarchived as! Rule);
+                    ruleList.List.append(cast);
+                    //ruleKeys.append(x.key);
+                }
+            }
+        }
+        ruleTable.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -147,6 +161,7 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
         let rule = Rule(label: label, before: before, length: length, pause: pause, repetitions: reps)
         //ruleTable.beginUpdates()
         ruleList.List.append(rule)
+        UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: rule), forKey: rule.getCacheName())
         ruleTable.reloadData()
         //ruleTable.endUpdates()
         changed = true
@@ -159,7 +174,9 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
         let rule = Rule(label: label, before: before, length: length, pause: pause, repetitions: reps)
         //ruleTable.beginUpdates()
         ruleList.List.remove(at: index)
+        UserDefaults.standard.removeObject(forKey: rule.getCacheName()); //also remove it from cache
         ruleList.List.insert(rule, at: index)
+        UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: rule), forKey: rule.getCacheName())
         ruleTable.reloadData()
         //ruleTable.endUpdates()
         changed = true
@@ -170,6 +187,18 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
     //
     func setNewRuleList(list: RuleList) {
         ruleList = list
+        
+        for x in UserDefaults.standard.dictionaryRepresentation() {
+            if let unarchivedObject = UserDefaults.standard.object(forKey: x.key) as? Data {
+                let unarchived = NSKeyedUnarchiver.unarchiveObject(with: unarchivedObject)
+                if (unarchived is Rule) {
+                    let rule = (unarchived as! Rule);
+                    UserDefaults.standard.removeObject(forKey: rule.getCacheName()); //also remove it from cache
+                    //ruleKeys.append(x.key);
+                }
+            }
+        }
+        
         ruleTable.reloadData()
         changed = false
     }
@@ -238,7 +267,8 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
     //
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            ruleList.List.remove(at: indexPath.row)
+            let rule = ruleList.List.remove(at: indexPath.row)
+            UserDefaults.standard.removeObject(forKey: rule.getCacheName()); //also remove it from cache
             tableView.deleteRows(at: [indexPath], with: .fade)
             if ruleList.List.count == 0 {
                 changed = false
