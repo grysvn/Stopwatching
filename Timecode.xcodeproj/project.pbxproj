@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E80591401DDBC4010073E570 /* InfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E805913F1DDBC4010073E570 /* InfoController.swift */; };
+		E80591421DDCB10E0073E570 /* SavedRuleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E80591411DDCB10E0073E570 /* SavedRuleController.swift */; };
 		E82703D61D91CAB4002DA12C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82703D51D91CAB4002DA12C /* AppDelegate.swift */; };
 		E82703D81D91CAB4002DA12C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82703D71D91CAB4002DA12C /* ViewController.swift */; };
 		E82703DB1D91CAB4002DA12C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E82703D91D91CAB4002DA12C /* Main.storyboard */; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E805913F1DDBC4010073E570 /* InfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoController.swift; sourceTree = "<group>"; };
+		E80591411DDCB10E0073E570 /* SavedRuleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedRuleController.swift; sourceTree = "<group>"; };
 		E82703D21D91CAB4002DA12C /* Timecode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timecode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E82703D51D91CAB4002DA12C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E82703D71D91CAB4002DA12C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -65,10 +69,12 @@
 				E84DCB311D97247B007B51D7 /* NewRuleViewController.swift */,
 				E8A1B4FC1D94799600B78DE7 /* Rule.swift */,
 				E8A1B4FE1D947B9400B78DE7 /* RuleList.swift */,
-				E82703D91D91CAB4002DA12C /* Main.storyboard */,
 				E82703DC1D91CAB4002DA12C /* Assets.xcassets */,
 				E82703DE1D91CAB4002DA12C /* LaunchScreen.storyboard */,
+				E82703D91D91CAB4002DA12C /* Main.storyboard */,
 				E82703E11D91CAB4002DA12C /* Info.plist */,
+				E805913F1DDBC4010073E570 /* InfoController.swift */,
+				E80591411DDCB10E0073E570 /* SavedRuleController.swift */,
 			);
 			path = Timecode;
 			sourceTree = "<group>";
@@ -107,6 +113,11 @@
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = M3LT87XF73;
 						LastSwiftMigration = 0800;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -150,7 +161,9 @@
 				E8A1B4FF1D947B9400B78DE7 /* RuleList.swift in Sources */,
 				E82703D81D91CAB4002DA12C /* ViewController.swift in Sources */,
 				E82703D61D91CAB4002DA12C /* AppDelegate.swift in Sources */,
+				E80591421DDCB10E0073E570 /* SavedRuleController.swift in Sources */,
 				E84DCB321D97247B007B51D7 /* NewRuleViewController.swift in Sources */,
+				E80591401DDBC4010073E570 /* InfoController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,8 +281,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Timecode/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.mattgray.time-code";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -281,8 +296,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Timecode/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.mattgray.time-code";
 				PRODUCT_NAME = "$(TARGET_NAME)";

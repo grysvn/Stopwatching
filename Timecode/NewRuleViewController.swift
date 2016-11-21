@@ -9,7 +9,9 @@
 import UIKit
 
 protocol DataEnteredDelegate: class {
-    func addRule(label: String, before: Int, length: Int, pause: Int, reps: Int)
+    func addRule(label: String, before: Int, length: Int, pause: Int, reps: Int) //used when adding a rule
+    func editRule(index: Int, label: String, before: Int, length: Int, pause: Int, reps: Int) //used when editing a rule
+    func setNewRuleList(list: RuleList) //used when resetting the current RuleList to a new/old RuleList
 }
 
 class NewRuleViewController: UIViewController {
@@ -20,9 +22,19 @@ class NewRuleViewController: UIViewController {
     @IBOutlet weak var reps: UITextField!
     weak var delegate: DataEnteredDelegate? = nil
     
+    var rule: Rule?
+    var editingRule = false
+    var index = -1
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        if editingRule {
+            name.text = rule?.label
+            before.text = "\(rule!.before)"
+            length.text = "\(rule!.length)"
+            pause.text = "\(rule!.pause)"
+            reps.text = "\(rule!.repetitions)"
+        }
         // Do any additional setup after loading the view.
     }
 
@@ -32,7 +44,43 @@ class NewRuleViewController: UIViewController {
     }
     
     @IBAction func save(_ sender: AnyObject) {
-        delegate?.addRule(label: name.text!, before: Int(before.text!)!, length: Int(length.text!)!, pause: Int(pause.text!)!, reps: Int(reps.text!)!)
+        if ((name.text?.isEmpty)! || (before.text?.isEmpty)! || (length.text?.isEmpty)! || (pause.text?.isEmpty)! || (reps.text?.isEmpty)! || Int(pause.text!)! < 3) {
+            /*let alert = UIAlertView()
+            alert.title = "Error!"
+            alert.message = "You cannot add a rule with any empty fields."
+            alert.addButton(withTitle: "Got it!")
+            alert.show()
+            return*/
+            
+            //thanks SO!
+            //1. Create the alert controller.
+            var alert: UIAlertController
+            if (pause.text?.isEmpty)! == false && Int(pause.text!)! < 1 {
+                alert = UIAlertController(title: "Error!", message: "You cannot add a rule with a break less than 3 seconds", preferredStyle: .alert)
+            } else {
+                alert = UIAlertController(title: "Error!", message: "You cannot add a rule with any empty fields", preferredStyle: .alert)
+            }
+            
+            // 3. Grab the value from the text field, and print it when the user clicks OK.
+            alert.addAction(UIAlertAction(title: "Got it!", style: .default))
+            
+            // 4. Present the alert.
+            self.present(alert, animated: true, completion: nil)
+            
+            return
+
+        }
+        let nameText = name.text!
+        let beforeNum = Int(before.text!)!
+        let lengthNum = Int(length.text!)!
+        let pauseNum = Int(pause.text!)!
+        let repsNum = Int(reps.text!)!
+        if (editingRule) {
+            editingRule = false;
+            delegate?.editRule(index: index, label: nameText, before: beforeNum, length: lengthNum, pause: pauseNum, reps: repsNum)
+        } else {
+            delegate?.addRule(label: nameText, before: beforeNum, length: lengthNum, pause: pauseNum, reps: repsNum)
+        }
         clearFields()
         self.navigationController?.popViewController(animated: true)
     }

@@ -8,22 +8,50 @@
 
 import Foundation
 
-class Rule {
-    var label = ""
-    var before = 0
-    var length = 0
-    var pause = 0
-    var repetitions = 0
+@objc(Rule)
+class Rule : NSObject, NSCoding {
+    let label: String
+    let before: Int
+    let length: Int
+    let pause: Int
+    let repetitions: Int
     
-    init (label: String, before: Int, length: Int, pause: Int, repetitions: Int) {
-        self.label = label;
-        self.before = before;
-        self.length = length;
-        self.pause = pause;
-        self.repetitions = repetitions;
+    required init(label:String, before:Int, length:Int, pause:Int, repetitions:Int) {
+        self.label = label
+        self.before = before
+        self.length = length
+        self.pause = pause
+        self.repetitions = repetitions
+        super.init()
     }
     
-    func calculateTotalTime() {
-        
+    static func == (left: Rule, right: Rule) -> Bool {
+        return left.label == right.label && left.before == right.before && left.length == right.length && left.pause == right.pause && left.repetitions == right.repetitions
+    }
+
+    
+    func calculateTotalTime() -> Int {
+        return (before + length + pause) * repetitions
+    }
+    
+    override var description: String {
+        return label
+    }
+    
+    //MARK: - NSCoding -
+    required init(coder aDecoder: NSCoder) {
+        label = aDecoder.decodeObject(forKey: "label") as! String
+        before = Int(aDecoder.decodeInt32(forKey: "before"))
+        length = Int(aDecoder.decodeInt32(forKey: "length"))
+        pause = Int(aDecoder.decodeInt32(forKey: "pause"))
+        repetitions = Int(aDecoder.decodeInt32(forKey: "repetitions"))
+    }
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(label, forKey: "label")
+        aCoder.encode(before, forKey: "before")
+        aCoder.encode(length, forKey: "length")
+        aCoder.encode(pause, forKey: "pause")
+        aCoder.encode(repetitions, forKey: "repetitions")
     }
 }
