@@ -115,6 +115,7 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
             timeLabel.text = "00:00:00:0";
             stopButton.setTitle("Pause", for: UIControlState())
             if ((self.ruleTable.indexPathForSelectedRow) != nil) {
+                self.ruleTable.cellForRow(at: self.ruleTable.indexPathForSelectedRow!)!.detailTextLabel?.text = ""
                 self.ruleTable.deselectRow(at: self.ruleTable.indexPathForSelectedRow!, animated: true)
             }
             ruleTable.isUserInteractionEnabled = true
@@ -134,7 +135,16 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
         if ((current) != nil) {
             let ind = ruleList.List.index(of: current!)
             let path = IndexPath(row: ind!, section: 0)
+            var prevPath: IndexPath?
+            if (ind! != 0) {
+                prevPath = IndexPath(row: ind! - 1, section: 0)
+            }
+            if (prevPath != nil) {
+                self.ruleTable.cellForRow(at: prevPath!)?.detailTextLabel?.text = ""
+            }
             self.ruleTable.selectRow(at: path, animated: true, scrollPosition: UITableViewScrollPosition.middle)
+            self.ruleTable.cellForRow(at: path)?.detailTextLabel?.text = ruleList.getCurrentRuleString(timeStamp: sec)
+            //self.ruleTable.cellForRow(at: path)?.detailTextLabel?.text = "test"
             if (counter % 10 == 0) {
                 let elapsed = ruleList.getPriorElapsedTime(timeStamp: sec)
                 if (counter == 0 || (sec - elapsed) % (current!.before + current!.length + current!.pause) < current!.before) { //COUNTDOWN
@@ -148,6 +158,7 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
             }
         } else {
             if ((self.ruleTable.indexPathForSelectedRow) != nil) {
+                self.ruleTable.cellForRow(at: self.ruleTable.indexPathForSelectedRow!)!.detailTextLabel?.text = ""
                 self.ruleTable.deselectRow(at: self.ruleTable.indexPathForSelectedRow!, animated: true)
             }
         }
@@ -246,8 +257,8 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:UITableViewCell = self.ruleTable.dequeueReusableCell(withIdentifier: "cell")! as UITableViewCell
-        
+        //let cell:UITableViewCell = self.ruleTable.dequeueReusableCell(withIdentifier: "cell")! as UITableViewCell
+        let cell = UITableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: "cell")
         cell.textLabel?.font = UIFont(name: "Helvetica", size: 14.0)
         cell.textLabel?.text = self.ruleList.List[indexPath.row].label
         

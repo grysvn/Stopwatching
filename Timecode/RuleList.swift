@@ -58,6 +58,42 @@ class RuleList : NSObject, NSCoding {
     }
     
     //
+    //gets the current rule string (for subheading)
+    //
+    func getCurrentRuleString(timeStamp: Int) -> String?
+    {
+        let priorTime = getPriorElapsedTime(timeStamp: timeStamp)
+        var time = timeStamp - priorTime //time elapsed under current rule
+        let ruleFound = getCurrentRule(timeStamp: timeStamp)
+        if (ruleFound == nil) {
+            return nil
+        }
+        let singleRepTime = ruleFound!.calculateTotalTime() / ruleFound!.repetitions
+        let repetition = time / singleRepTime + 1
+        time = time % singleRepTime
+        time -= ruleFound!.before
+        if time < 0 {
+            let sec = priorTime + (singleRepTime * (repetition - 1)) + ruleFound!.before
+            let formattedStamp = String.init(format: "%02d:%02d:%02d:0", sec / 3600, (sec / 60) % 3600, sec % 60)
+            return "Countdown \(repetition)/\(ruleFound!.repetitions) done at \(formattedStamp)"
+        }
+        time -= ruleFound!.length
+        if time < 0 {
+            let sec = priorTime + (singleRepTime * (repetition - 1)) + ruleFound!.before + ruleFound!.length
+            let formattedStamp = String.init(format: "%02d:%02d:%02d:0", sec / 3600, (sec / 60) % 3600, sec % 60)
+            return "Activity \(repetition)/\(ruleFound!.repetitions) done at \(formattedStamp)"
+        }
+        time -= ruleFound!.pause
+        if time < 0 {
+            let sec = priorTime + (singleRepTime * (repetition))
+            let formattedStamp = String.init(format: "%02d:%02d:%02d:0", sec / 3600, (sec / 60) % 3600, sec % 60)
+            return "Break \(repetition)/\(ruleFound!.repetitions) done at \(formattedStamp)"
+        }
+        return "oops"
+        //return "Countdown \(repetition)/\(ruleFound!.repetitions)"
+    }
+    
+    //
     //gets the next rule from the current time stamp
     //
     func getNextRule(timeStamp: Int) -> Rule? {
