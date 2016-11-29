@@ -199,6 +199,10 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
             }
         }
         
+        for rule in ruleList.List {
+            UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: rule), forKey: rule.getCacheName())
+        }
+        
         ruleTable.reloadData()
         changed = false
     }

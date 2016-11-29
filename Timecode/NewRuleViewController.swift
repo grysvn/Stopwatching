@@ -55,7 +55,7 @@ class NewRuleViewController: UIViewController {
             //thanks SO!
             //1. Create the alert controller.
             var alert: UIAlertController
-            if (pause.text?.isEmpty)! == false && Int(pause.text!)! < 1 {
+            if (pause.text?.isEmpty)! == false || Int(pause.text!)! < 1 {
                 alert = UIAlertController(title: "Error!", message: "You cannot add a rule with a break less than 3 seconds", preferredStyle: .alert)
             } else {
                 alert = UIAlertController(title: "Error!", message: "You cannot add a rule with any empty fields", preferredStyle: .alert)
