@@ -34,6 +34,9 @@ class NewRuleViewController: UIViewController {
             length.text = "\(rule!.length)"
             pause.text = "\(rule!.pause)"
             reps.text = "\(rule!.repetitions)"
+            self.navigationItem.title = "Edit Rule"
+        } else {
+            self.navigationItem.title = "New Rule"
         }
         // Do any additional setup after loading the view.
     }

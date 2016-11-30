@@ -44,13 +44,14 @@
                                             <segue destination="2cZ-0L-MuS" kind="show" identifier="addRule" id="gxg-yg-KE5"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="uvR-WJ-jMj"/>
-                                    <barButtonItem title="Save" id="fIT-P9-P85">
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="MI4-av-zHh"/>
+                                    <barButtonItem title="Save List" id="fIT-P9-P85">
                                         <connections>
                                             <action selector="saveRuleSet:" destination="BYZ-38-t0r" id="uNL-vD-Hin"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem systemItem="bookmarks" id="N8d-FN-W63">
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="B2T-mT-Ai2"/>
+                                    <barButtonItem title="View Saved" id="N8d-FN-W63">
                                         <connections>
                                             <segue destination="0kp-Gj-8UN" kind="show" identifier="showSavedRules" id="dxi-ui-OjW"/>
                                         </connections>
@@ -179,7 +180,7 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
                             <tableViewSection headerTitle="Usage" id="A36-3Z-zsi">
-                                <string key="footerTitle">Usage of the app is simple.  The timer can simply be used for a timer that doesn't sleep, but if you wish to add a rule that can be done too.  Rules are added using the + button on the main screen.  Sets of rules can be saved and retrieved using the save and book icon at the bottom of the screen.</string>
+                                <string key="footerTitle">Usage of the app is simple.  The timer can simply be used for a timer that doesn't sleep, but if you wish to add a rule that can be done too.  Rules are added using the + button on the main screen.  Sets of rules can be saved and retrieved using the Save List and View Saved buttons at the bottom of the screen.</string>
                                 <cells/>
                             </tableViewSection>
                             <tableViewSection headerTitle="About" id="2l6-dK-xBo">
@@ -489,7 +490,7 @@ Reps is the number of times you wish to complete the activity (number of respect
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="uNH-YX-o1t" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Buo-T4-yLC">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Buo-T4-yLC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" red="0.9959825873374939" green="0.99621325731277466" blue="0.99187678098678589" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
