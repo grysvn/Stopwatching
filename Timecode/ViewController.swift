@@ -18,18 +18,23 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
     @IBOutlet weak var ruleTable: UITableView!
     var ruleList = RuleList(List: [Rule]())
     //var ruleKeys: [String] = []
-    var enabled = false //wh
+    //var enabled = false //wh
     var editingRule = false //editing a rule
     var timer = Timer() //timer for timing. duh
     var counter = 0 //timer 10th of a second counter used for timing
     var pauseClear = false //used for keeping track of whether pause should be "Pause" or "Clear"
     var selectionIsFromUser = true //used for whether we should ignore a selection, or allow user to edit rule
     var changed = false //whether or not a change has been made and if the rule set should be saved or not
+    var startTimeStamp = NSDate.distantPast //time stamp the timer started at
     
     let COUNTDOWN: SystemSoundID = SystemSoundID(1106)
     let START: SystemSoundID = SystemSoundID(1005)
     let END: SystemSoundID = SystemSoundID(1005)
-
+    
+    //UserDefaults keys
+    let RUNNING = "running" //for boolean running value
+    let TIMESTAMP = "timestamp" //for timestamp started at
+    let ELAPSED = "elapsed"
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "addRule" && self.editingRule {
@@ -59,6 +64,42 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
         self.navigationController?.navigationBar.isTranslucent = false
         UIApplication.shared.isIdleTimerDisabled = true
         self.ruleTable.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        //check if we need to set the timer
+        if let stamp = UserDefaults.standard.object(forKey: TIMESTAMP) as? Date {
+            if stamp != Date.distantPast { //it was running
+                startTimeStamp = stamp
+                let secsSince = Date().timeIntervalSince(startTimeStamp)
+                counter = Int(secsSince) * 10
+                
+                //for elapsed time
+                if (UserDefaults.standard.object(forKey: ELAPSED) != nil) {
+                    counter += UserDefaults.standard.integer(forKey: ELAPSED)
+                }
+                UserDefaults.standard.set(counter, forKey: ELAPSED)
+                let sec = counter / 10
+                timeLabel.text = String.init(format: "%02d:%02d:%02d:%d", sec / 3600, (sec / 60) % 3600, sec % 60, counter % 10)
+                
+                //now whether or not we're running
+                let running = UserDefaults.standard.bool(forKey: RUNNING)
+                if running {
+                    startTouched(self);
+                } else { //don't think this will ever run but here just in case
+                    stopButton.setTitle("Clear", for: UIControlState())
+                    stopButton.isEnabled = true;
+                    pauseClear = true;
+                }
+            } else { //when paused or not run
+                if (UserDefaults.standard.object(forKey: ELAPSED) != nil) {
+                    counter += UserDefaults.standard.integer(forKey: ELAPSED)
+                    let sec = counter / 10
+                    timeLabel.text = String.init(format: "%02d:%02d:%02d:%d", sec / 3600, (sec / 60) % 3600, sec % 60, counter % 10)
+                    stopButton.setTitle("Clear", for: UIControlState())
+                    stopButton.isEnabled = true;
+                    pauseClear = true;
+                }
+            }
+        }
         
         //lets add any rules that are saved
         for x in UserDefaults.standard.dictionaryRepresentation() {
@@ -92,6 +133,11 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
             pauseClear = false;
             stopButton.setTitle("Pause", for: UIControlState())
         }
+        //we run this not just on start, because we need to keep track of elapsed time with pauses
+        startTimeStamp = Date()
+        UserDefaults.standard.set(startTimeStamp, forKey: TIMESTAMP)
+        
+        UserDefaults.standard.set(true, forKey: RUNNING)
         startButton.isEnabled = false
         stopButton.isEnabled = true;
         timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.update), userInfo: nil, repeats: true)
@@ -103,16 +149,29 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
     //stops the timer
     //
     @IBAction func stopTouched(_ sender: AnyObject) {
+        UserDefaults.standard.set(false, forKey: RUNNING) //if app is unloaded and reloaded, we want to have the timer STOPPED
         if !pauseClear {
             startButton.isEnabled = true;
             timer.invalidate()
             pauseClear = true;
             stopButton.setTitle("Clear", for: UIControlState())
+            
+            //we do this to prevent the backgrounding timestamp from advancing even when the timer is paused
+            UserDefaults.standard.set(counter, forKey: ELAPSED)
+            UserDefaults.standard.set(false, forKey: RUNNING)
+            startTimeStamp = Date.distantPast
+            UserDefaults.standard.set(startTimeStamp, forKey: TIMESTAMP)
         } else {
             stopButton.isEnabled = false;
             pauseClear = false;
             counter = 0;
             timeLabel.text = "00:00:00:0";
+            
+            //backgrounding stuff
+            startTimeStamp = Date.distantPast
+            UserDefaults.standard.set(0, forKey: ELAPSED)
+            UserDefaults.standard.set(startTimeStamp, forKey: TIMESTAMP)
+            
             stopButton.setTitle("Pause", for: UIControlState())
             if ((self.ruleTable.indexPathForSelectedRow) != nil) {
                 self.ruleTable.cellForRow(at: self.ruleTable.indexPathForSelectedRow!)!.detailTextLabel?.text = ""
