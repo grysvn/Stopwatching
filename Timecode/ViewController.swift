@@ -57,14 +57,10 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
             }
         }
     }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        stopButton.isEnabled = false
-        self.navigationController?.navigationBar.isTranslucent = false
-        UIApplication.shared.isIdleTimerDisabled = true
-        self.ruleTable.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        
+    
+    //load the timer
+    func loadTimer()
+    {
         //check if we need to set the timer
         if let stamp = UserDefaults.standard.object(forKey: TIMESTAMP) as? Date {
             if stamp != Date.distantPast { //it was running
@@ -84,22 +80,44 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
                 let running = UserDefaults.standard.bool(forKey: RUNNING)
                 if running {
                     startTouched(self);
-                } else { //don't think this will ever run but here just in case
-                    stopButton.setTitle("Clear", for: UIControlState())
-                    stopButton.isEnabled = true;
-                    pauseClear = true;
-                }
+                } /*else { //don't think this will ever run but here just in case
+                 stopButton.setTitle("Clear", for: UIControlState())
+                 stopButton.isEnabled = true;
+                 pauseClear = true;
+                 } */ //removed because it was mistakenly clearing the application
             } else { //when paused or not run
                 if (UserDefaults.standard.object(forKey: ELAPSED) != nil) {
-                    counter += UserDefaults.standard.integer(forKey: ELAPSED)
-                    let sec = counter / 10
-                    timeLabel.text = String.init(format: "%02d:%02d:%02d:%d", sec / 3600, (sec / 60) % 3600, sec % 60, counter % 10)
-                    stopButton.setTitle("Clear", for: UIControlState())
-                    stopButton.isEnabled = true;
+                    counter = UserDefaults.standard.integer(forKey: ELAPSED)
+                    if (counter != 0) {
+                        let sec = counter / 10
+                        timeLabel.text = String.init(format: "%02d:%02d:%02d:%d", sec / 3600, (sec / 60) % 3600, sec % 60, counter % 10)
+                        stopButton.setTitle("Clear", for: UIControlState())
+                        stopButton.isEnabled = true;
+                    }
                     pauseClear = true;
                 }
             }
         }
+    }
+    
+    func viewResumed()
+    {
+        loadTimer()
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        stopButton.isEnabled = false
+        self.navigationController?.navigationBar.isTranslucent = false
+        UIApplication.shared.isIdleTimerDisabled = true
+        self.ruleTable.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        //resuming from backgrounding
+        NotificationCenter.default.removeObserver(self)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.viewResumed), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+        
+        //load it here and on view resumed because the events are mutually exclusive
+        loadTimer()
         
         //lets add any rules that are saved
         for x in UserDefaults.standard.dictionaryRepresentation() {
@@ -140,7 +158,9 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
         UserDefaults.standard.set(true, forKey: RUNNING)
         startButton.isEnabled = false
         stopButton.isEnabled = true;
-        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.update), userInfo: nil, repeats: true)
+        if (!timer.isValid) {
+            timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.update), userInfo: nil, repeats: true)
+        }
         selectionIsFromUser = false
         ruleTable.isUserInteractionEnabled = false
     }
