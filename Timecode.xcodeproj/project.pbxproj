@@ -15,9 +15,23 @@
 		E82703DD1D91CAB4002DA12C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E82703DC1D91CAB4002DA12C /* Assets.xcassets */; };
 		E82703E01D91CAB4002DA12C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E82703DE1D91CAB4002DA12C /* LaunchScreen.storyboard */; };
 		E84DCB321D97247B007B51D7 /* NewRuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84DCB311D97247B007B51D7 /* NewRuleViewController.swift */; };
+		E8860E631FDDB4BF003D1842 /* beep-01a.mp3 in CopyFiles */ = {isa = PBXBuildFile; fileRef = E8860E621FDDB4BF003D1842 /* beep-01a.mp3 */; };
 		E8A1B4FD1D94799600B78DE7 /* Rule.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A1B4FC1D94799600B78DE7 /* Rule.swift */; };
 		E8A1B4FF1D947B9400B78DE7 /* RuleList.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A1B4FE1D947B9400B78DE7 /* RuleList.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E8860E5D1FDDB362003D1842 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				E8860E631FDDB4BF003D1842 /* beep-01a.mp3 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		E805913F1DDBC4010073E570 /* InfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoController.swift; sourceTree = "<group>"; };
@@ -30,6 +44,9 @@
 		E82703DF1D91CAB4002DA12C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E82703E11D91CAB4002DA12C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E84DCB311D97247B007B51D7 /* NewRuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewRuleViewController.swift; sourceTree = "<group>"; };
+		E8860E5E1FDDB37F003D1842 /* beep-01a.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "beep-01a.mp3"; sourceTree = "<group>"; };
+		E8860E601FDDB4A0003D1842 /* beep-01a.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "beep-01a.mp3"; path = "../../../../../../Users/grayma/Downloads/beep-01a.mp3"; sourceTree = "<group>"; };
+		E8860E621FDDB4BF003D1842 /* beep-01a.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "beep-01a.mp3"; path = "Resources/Sounds/beep-01a.mp3"; sourceTree = "<group>"; };
 		E8A1B4FC1D94799600B78DE7 /* Rule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rule.swift; sourceTree = "<group>"; };
 		E8A1B4FE1D947B9400B78DE7 /* RuleList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuleList.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -48,6 +65,9 @@
 		E82703C91D91CAB4002DA12C = {
 			isa = PBXGroup;
 			children = (
+				E8860E5E1FDDB37F003D1842 /* beep-01a.mp3 */,
+				E8860E601FDDB4A0003D1842 /* beep-01a.mp3 */,
+				E8860E621FDDB4BF003D1842 /* beep-01a.mp3 */,
 				E82703D41D91CAB4002DA12C /* Timecode */,
 				E82703D31D91CAB4002DA12C /* Products */,
 			);
@@ -89,6 +109,7 @@
 				E82703CE1D91CAB4002DA12C /* Sources */,
 				E82703CF1D91CAB4002DA12C /* Frameworks */,
 				E82703D01D91CAB4002DA12C /* Resources */,
+				E8860E5D1FDDB362003D1842 /* CopyFiles */,
 			);
 			buildRules = (
 			);

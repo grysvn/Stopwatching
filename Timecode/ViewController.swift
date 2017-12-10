@@ -12,10 +12,13 @@ import UIKit
 
 class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate, UITableViewDataSource {
     
+    @IBOutlet weak var ruleStringLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var stopButton: UIButton!
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var ruleTable: UITableView!
+    
+    var player: AVAudioPlayer?
     var ruleList = RuleList(List: [Rule]())
     //var ruleKeys: [String] = []
     //var enabled = false //wh
@@ -26,7 +29,9 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
     var selectionIsFromUser = true //used for whether we should ignore a selection, or allow user to edit rule
     var changed = false //whether or not a change has been made and if the rule set should be saved or not
     var startTimeStamp = NSDate.distantPast //time stamp the timer started at
+    var isLandscape = false //used to check whether or not the view details need to be in the timer label
     
+    let COUNTDOWN_ARRAY: [SystemSoundID] = [ SystemSoundID(1200), SystemSoundID(1201), SystemSoundID(1202), SystemSoundID(1203), SystemSoundID(1204), SystemSoundID(1205), SystemSoundID(1206), SystemSoundID(1207), SystemSoundID(1208), SystemSoundID(1209) ]
     let COUNTDOWN: SystemSoundID = SystemSoundID(1106)
     let START: SystemSoundID = SystemSoundID(1005)
     let END: SystemSoundID = SystemSoundID(1005)
@@ -80,11 +85,7 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
                 let running = UserDefaults.standard.bool(forKey: RUNNING)
                 if running {
                     startTouched(self);
-                } /*else { //don't think this will ever run but here just in case
-                 stopButton.setTitle("Clear", for: UIControlState())
-                 stopButton.isEnabled = true;
-                 pauseClear = true;
-                 } */ //removed because it was mistakenly clearing the application
+                }
             } else { //when paused or not run
                 if (UserDefaults.standard.object(forKey: ELAPSED) != nil) {
                     counter = UserDefaults.standard.integer(forKey: ELAPSED)
@@ -102,13 +103,19 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
     
     func viewResumed()
     {
+        detectOrientation()
         loadTimer()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        detectOrientation()
         stopButton.isEnabled = false
-        self.navigationController?.navigationBar.isTranslucent = false
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.tapFunction))
+        timeLabel.isUserInteractionEnabled = true
+        timeLabel.addGestureRecognizer(tap)
+    self.navigationController?.navigationBar.isTranslucent = false
         UIApplication.shared.isIdleTimerDisabled = true
         self.ruleTable.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
@@ -169,6 +176,7 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
     //stops the timer
     //
     @IBAction func stopTouched(_ sender: AnyObject) {
+        ruleStringLabel.text = ""
         UserDefaults.standard.set(false, forKey: RUNNING) //if app is unloaded and reloaded, we want to have the timer STOPPED
         if !pauseClear {
             startButton.isEnabled = true;
@@ -223,11 +231,19 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
             }
             self.ruleTable.selectRow(at: path, animated: true, scrollPosition: UITableViewScrollPosition.middle)
             self.ruleTable.cellForRow(at: path)?.detailTextLabel?.text = ruleList.getCurrentRuleString(timeStamp: sec)
+            if (isLandscape) {
+                ruleStringLabel.text = "\(ruleList.getCurrentRuleString(timeStamp: sec) ?? "")"
+                //print(timeLabel.text!)
+            }
+            else {
+                ruleStringLabel.text = ""
+            }
             //self.ruleTable.cellForRow(at: path)?.detailTextLabel?.text = "test"
             if (counter % 10 == 0) {
                 let elapsed = ruleList.getPriorElapsedTime(timeStamp: sec)
-                if (counter == 0 || (sec - elapsed) % (current!.before + current!.length + current!.pause) < current!.before) { //COUNTDOWN
-                    AudioServicesPlaySystemSound(COUNTDOWN)
+                let countdown_remain = (sec - elapsed) % (current!.before + current!.length + current!.pause)
+                if (counter == 0 || countdown_remain < current!.before) { //COUNTDOWN
+                    playSound(soundResourceName: "beep-01a")
                 } else if ((sec - elapsed) % (current!.before + current!.length + current!.pause) == current!.before ) { //START
                     AudioServicesPlaySystemSound(START)
                 } else if ((sec - elapsed) % (current!.before + current!.length + current!.pause) == current!.before + current!.length) {
@@ -369,6 +385,65 @@ class ViewController: UIViewController, DataEnteredDelegate, UITableViewDelegate
             }
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+        }
+    }
+    
+    //hide the table
+    override func willAnimateRotation(to toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval)
+    {
+        //portrait
+        if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation))
+        {
+            ruleTable.isHidden = false
+            ruleStringLabel.isHidden = true;
+            timeLabel.font = UIFont(name: "Courier", size: 20)
+            startButton.isHidden = false
+            stopButton.isHidden = false
+            isLandscape = false
+        }
+        //landscape
+        else
+        {
+            ruleTable.isHidden = true
+            startButton.isHidden = true
+            stopButton.isHidden = true
+            isLandscape = true
+            timeLabel.font = UIFont(name: "Courier", size: 72)
+            timeLabel.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height / 2)
+            ruleStringLabel.frame = CGRect(x: timeLabel.frame.minX, y: timeLabel.frame.maxY, width: self.view.frame.width, height: self.view.frame.height / 2)
+            ruleStringLabel.isHidden = false
+        }
+    }
+    
+    func tapFunction() {
+        if (startButton.isEnabled) {
+            startTouched(self)
+        } else {
+            stopTouched(self)
+        }
+    }
+    
+    func detectOrientation() {
+        self.willAnimateRotation(to: self.interfaceOrientation, duration: Double(0.1))
+    }
+    
+    //s/o to this SO answer https://stackoverflow.com/questions/32036146/how-to-play-a-sound-using-swift
+    
+    func playSound(soundResourceName: String) {
+        guard let url = Bundle.main.url(forResource: soundResourceName, withExtension: "mp3") else { return }
+        
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryAmbient)
+            try AVAudioSession.sharedInstance().setActive(true)
+            
+            player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileTypeMPEGLayer3)
+            
+            guard let player = player else { return }
+            
+            player.play()
+            
+        } catch let error {
+            print(error.localizedDescription)
         }
     }
 }
